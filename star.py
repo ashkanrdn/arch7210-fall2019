@@ -26,7 +26,7 @@ screen = turtle.Screen()
 screen.title(f'{n}-Pointed Star')
 
 a = 360 / n
-s = -r * math.sin(180 - a/2) / math.sin(180 - a/4)
+s = math.fabs(r * math.sin(math.pi - math.radians(a)/2) / math.sin(math.radians(a)/4))
 
 t.pendown()
 

@@ -23,7 +23,7 @@ screen = turtle.Screen()
 screen.title(f'{n}-Sided Regular Polygon')
 
 a = 360 / n
-s = -r * math.sin(a) / math.sin((180 - a)/2)
+s = math.fabs(r * math.sin(math.radians(a)) / math.sin((math.pi - math.radians(a)) / 2))
 
 t.penup()
 t.goto(0, r)
