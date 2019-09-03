@@ -69,7 +69,7 @@ class Spirograph(turtle.Turtle):
             angle += step
         
         self.pencolor(colorsys.hsv_to_rgb(angle / maxAngle, 1, 1))
-        self.goto(self.get_coordinates(angle))
+        self.goto(self.get_coordinates(maxAngle))
         self._update()
 
 
