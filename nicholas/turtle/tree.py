@@ -1,45 +1,69 @@
 import argparse
+import math
 import turtle
 
-class Tree(turtle.Turtle):
-	
-	left = None
-	right = None
-	drawn = False
+numBranches = 3
+branchSpread = 60
+initialBranchLength = 200
+minimumBranchLength = 5
+branchScalingFactor = 2
 
-	def __init__(self, position, heading, length=200):
-		turtle.Turtle.__init__(self)
-		self.hideturtle()
-		self.penup()
-		self.setposition(position)
-		self.setheading(heading)
-		self.length = length
-		self.pendown()
+class Branch:
+
+	branches = []
 	
-	def draw(self, minBranchLength=5):
-		if self.length < minBranchLength:
-			self.dot(minBranchLength, '#009900')
+	def __init__(self, t, d=0):
+		self.turtle = t
+		self.depth = d
+
+	def length(self):
+		return initialBranchLength / (branchScalingFactor ** self.depth)
+
+	# def width(self):
+	# 	return 
+
+	# def color(self):
+
+	def branch(self, deflection):
+		b = Branch(self.turtle.clone(), self.depth + 1)
+		b.turtle.left(deflection)
+		self.branches.append(b)
+	
+	def draw(self):
+		length = self.length()
+		print(self, length)
+
+		if length < minimumBranchLength:
+			self.turtle.dot(minimumBranchLength, '#009900')
 			return True
-		elif self.left == None or self.right == None:
-			self.forward(self.length)
-			self.left = Tree(self.position(), self.heading() - 30, self.length * 0.5)
-			self.right = Tree(self.position(), self.heading() + 30, self.length * 0.5)
-			self.drawn = True
+
+		elif len(self.branches) == 0:
+			self.turtle.forward(length)
+			for i in range(numBranches):
+				self.branch(i * branchSpread / numBranches - branchSpread / 2)
 			return False
-		else:
-			leftDone = self.left.draw(minBranchLength)
-			rightDone = self.right.draw(minBranchLength)
-			return leftDone and rightDone
+
+		# else:
+		# 	allDone = False
+		# 	for b in self.branches:
+		# 		done = b.draw()
+		# 		allDone = allDone or done
+		# 	return True
 
 
 screen = turtle.Screen()
-screen.tracer(1, 0)
+screen.tracer(0, 0)
 
-tree = Tree((0, -200), 90, 200)
-tree.numBranches = 3
+t = turtle.Turtle()
+t.hideturtle()
+t.setheading(90)
+
+root = Branch(t)
 done = False
 
-while not done:
-	done = tree.draw(5)
+for i in range(5):
+	print(i)
+	done = root.draw()
+	turtle.update()
 
 turtle.done()
