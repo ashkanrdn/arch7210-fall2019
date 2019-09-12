@@ -3,9 +3,6 @@ from turtle import TNavigator, Vec2D
 from ScaledTurtle import ScaledTurtle
 from MotionVector import MotionVector
 
-
-# https://introcs.cs.princeton.edu/python/34nbody/
-
 # Gravitational constant in cubic meters per kilogram per seconds squared (m3⋅kg−1⋅s−2)
 G = 6.674e-11
 
