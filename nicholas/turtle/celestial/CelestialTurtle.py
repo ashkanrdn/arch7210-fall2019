@@ -1,20 +1,24 @@
 import math
-from turtle import TNavigator, Vec2D
 from ScaledTurtle import ScaledTurtle
-from MotionVector import MotionVector
+
+from astropy.coordinates import CartesianRepresentation, PhysicsSphericalRepresentation
+from astropy import units
 
 # Gravitational constant in cubic meters per kilogram per seconds squared (m3⋅kg−1⋅s−2)
-G = 6.674e-11
+G = 6.674e-11 * units.meter**3 / units.kilogram / units.second**2
 
 class CelestialTurtle(ScaledTurtle):
 
-    # Mass of the turtle in kilograms
-    mass = 0.0
+    # The mass of the turtle
+    mass = 0 * units.kilogram
 
-    # Speed of the turtle in meters per second
-    _objectSpeed = 0.0
+    # The position of the turtle in 3D space
+    _position3D = CartesianRepresentation(0, 0, 0)
 
-    def __init__(self, mass=0.0, velocity=MotionVector(0, 0)):
+    # The velocity of the turtle in 3D space
+    _velocity3D = CartesianRepresentation(0, 0, 0)
+
+    def __init__(self, mass=0.0, velocity=CartesianRepresentation(0, 0, 0)):
         super().__init__(shape='circle')
         super().speed(0)
         self.radians()
@@ -23,33 +27,44 @@ class CelestialTurtle(ScaledTurtle):
         self.setvelocity(velocity)
 
     def velocity(self):
-        return MotionVector(self._objectSpeed, self.heading())
+        return self._velocity3D
     
     def setvelocity(self, velocity):
-        v = MotionVector(velocity)
-        self._objectSpeed = v.speed()
+        if not isinstance(velocity, CartesianRepresentation):
+            velocity = CartesianRepresentation(velocity)
+        self._velocity3D = velocity
+        self.setheading(math.atan2(velocity.y.value, velocity.x.value))
+    
+    def goto(self, x, y=None):
+        if isinstance(x, CartesianRepresentation):
+            self._position3D = x
+            x_km = self._position3D.x.to(units.kilometer).value
+            y_km = self._position3D.y.to(units.kilometer).value
+            super().goto(x_km, y_km)
+        else:
+            super().goto(x, y)
+            x_km = super().xcor() * units.kilometer
+            y_km = super().ycor() * units.kilometer
+            self._position3D = CartesianRepresentation(x_km, y_km, self._position3D.z)
 
-        heading = v.heading()
-        if heading is not None:
-            self.setheading(heading)
+    setposition = goto
+    setpos = goto
 
-    # Moves the turtle by applying the given force (a MotionVector) for the given number of seconds.
+    # Moves the turtle by applying the given force for the given amount of time.
     # Adapted from https://introcs.cs.princeton.edu/python/34nbody/body.py.html
     def move(self, force, time):
-        acceleration = force * (1 / self.mass)
-        velocity = MotionVector(self.velocity() + (acceleration * time))
-        position = self.position() + (velocity * time)
+        acceleration = force / self.mass
+        velocity = self._velocity3D + (acceleration * time)
+        position = self._position3D + (velocity * time)
         self.setposition(position)
         self.setvelocity(velocity)
 
     # Calculates the force exerted on this turtle by another CelestialTurtle
     # Adapted from https://introcs.cs.princeton.edu/python/34nbody/body.py.html
     def forceFrom(self, other):
-        delta = MotionVector(other.pos() - self.pos())
-        distance = abs(delta)
+        delta = other._position3D - self._position3D
+        direction = PhysicsSphericalRepresentation.from_cartesian(delta)
+        distance = direction.r
         magnitude = G * self.mass * other.mass / distance / distance
-        return MotionVector(magnitude, delta.heading())
-        
-    
-
-    
+        force = PhysicsSphericalRepresentation(direction.phi, direction.theta, magnitude)
+        return force.to_cartesian()

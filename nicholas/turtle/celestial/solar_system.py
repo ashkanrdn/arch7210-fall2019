@@ -1,13 +1,10 @@
-import math
 import turtle
-
+from astropy import units
 from TurtleSystem import TurtleSystem
-from MotionVector import MotionVector
 from horizons import HorizonsLookup
 
-UP = math.pi / 2
 turtle.Screen().tracer(0, 0)
-solarSystem = TurtleSystem(1e9)
+solarSystem = TurtleSystem(1e6)
 
 def create(id, color,):
     data = HorizonsLookup(id, '@ssb')
@@ -24,5 +21,5 @@ create('399', 'blue')   # Earth
 create('499', 'red')    # Mars
 
 while True:
-    solarSystem.advance(3600)
+    solarSystem.advance(86400 * units.second)
     turtle.update()

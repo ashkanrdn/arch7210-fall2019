@@ -1,8 +1,8 @@
 import re
-from turtle import Vec2D
+from astropy import units
 from astropy.time import Time
+from astropy.coordinates import CartesianRepresentation
 from astroquery.jplhorizons import Horizons
-from MotionVector import MotionVector
 from CelestialTurtle import CelestialTurtle
 
 _massPattern = re.compile('Mass,?\s*x?10\^([0-9]+)\s*\(?kg\)?\s*=\s*~?([.0-9]+)')
@@ -22,19 +22,20 @@ class HorizonsLookup:
         match = _massPattern.search(self.elements)
         if match:
             n, m = match.group(1), match.group(2)
-            return float(f'{m}e{n}')
+            kg = float(f'{m}e{n}')
+            return kg * units.kilogram
         return None
 
-    def vectorData(self, columnName, units):
+    def vectorData(self, columnName):
         if self.vectors is None:
             self.vectors = self.obj.vectors()
-        return self.vectors[columnName].to(units)[0].value
+        return self.vectors[columnName].quantity[0]
     
     def position(self):
-        return Vec2D(self.vectorData('x', 'm'), self.vectorData('y', 'm'))
+        return CartesianRepresentation(self.vectorData('x'), self.vectorData('y'), self.vectorData('z'))
 
     def velocity(self):
-        return MotionVector(self.vectorData('vx', 'm/s'), self.vectorData('vy', 'm/s'))
+        return CartesianRepresentation(self.vectorData('vx'), self.vectorData('vy'), self.vectorData('vz'))
     
     def assignTo(self, celestialTurtle):
         celestialTurtle.mass = self.mass()

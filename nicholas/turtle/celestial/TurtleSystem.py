@@ -1,5 +1,6 @@
+from astropy import units
+from astropy.coordinates import CartesianRepresentation
 from CelestialTurtle import CelestialTurtle
-from MotionVector import MotionVector
 
 class TurtleSystem:
 
@@ -15,11 +16,14 @@ class TurtleSystem:
         self.bodies.append(t)
         return t
 
-    # Advances the system by time seconds.
+    # Advances the system by the given amount of time.
     def advance(self, time):
         for targetBody in self.bodies:
-            force = MotionVector(0, 0)
+            force = None
             for otherBody in self.bodies:
                 if otherBody != targetBody:
-                    force += targetBody.forceFrom(otherBody)
+                    if force is None:
+                        force = targetBody.forceFrom(otherBody)
+                    else:
+                        force += targetBody.forceFrom(otherBody)
             targetBody.move(force, time)
