@@ -1,38 +1,29 @@
-import math
 import turtle
+from astropy import units
+from celestial import System
 
-from TurtleSystem import TurtleSystem
-from MotionVector import MotionVector
+screen = turtle.Screen()
+screen.bgcolor('#000000')
+screen.tracer(0, 0)
+solarSystem = System('@ssb', 1e6)
 
-UP = math.pi / 2
-turtle.Screen().tracer(0, 0)
+def create(type, id, color, size=12):
+    body = solarSystem.lookup(id, type)
+    body.pencolor(color)
+    body.pendown()
+    body.turtlesize(outline=size)
+    turtle.update()
+    return body
 
-solarSystem = TurtleSystem(1e9)
-sun = solarSystem.addBody(1.9885e30)
+create('majorbody', '10', '#ffe000', 24) # Sun
+create('majorbody', '199', '#999988')    # Mercury
+create('majorbody', '299', '#33ff00')    # Venus
+create('majorbody', '399', '#0099ff')    # Earth
+create('majorbody', '499', '#ff0000')    # Mars
 
-mercury = solarSystem.addBody(3.3011e23, MotionVector(47362, UP))
-mercury.setposition(57909050000, 0)
-mercury.pencolor('purple')
-mercury.pendown()
-
-venus = solarSystem.addBody(4.8675e24, MotionVector(35020, UP))
-venus.setposition(108208000000, 0)
-venus.pencolor('green')
-venus.pendown()
-
-earth = solarSystem.addBody(5.9722e24, MotionVector(29780, UP))
-earth.setposition(149598023000, 0)
-earth.pencolor('blue')
-earth.pendown()
-
-mars = solarSystem.addBody(6.4171e23, MotionVector(24007, UP))
-mars.setposition(227939200000, 0)
-mars.pencolor('red')
-mars.pendown()
+eros = create('smallbody', '433', '#aa9999', 4)
+eros.mass = 6.687e15 * units.kilogram
 
 while True:
-    solarSystem.advance(86000)
+    solarSystem.advance(24 * units.hour)
     turtle.update()
-
-
-turtle.done()
