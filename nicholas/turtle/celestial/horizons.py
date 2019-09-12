@@ -12,8 +12,8 @@ class HorizonsLookup:
     vectors = None
     elements = None
 
-    def __init__(self, objectId, relativeTo, time=Time.now()):
-        self.obj = Horizons(id=objectId, id_type='majorbody', location=relativeTo, epochs=time.jd)
+    def __init__(self, objectType, objectId, relativeTo, time=Time.now()):
+        self.obj = Horizons(id=objectId, id_type=objectType, location=relativeTo, epochs=time.jd)
 
     def mass(self):
         if self.elements is None:

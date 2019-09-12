@@ -20,7 +20,7 @@ class CelestialTurtle(ScaledTurtle):
 
     def __init__(self, mass=0.0, velocity=CartesianRepresentation(0, 0, 0)):
         super().__init__(shape='circle')
-        super().speed(0)
+        self.turtlesize(0.1, 0.1, 10)
         self.radians()
         self.penup()
         self.mass = mass
