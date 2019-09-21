@@ -9,6 +9,7 @@ class Turtle:
         self._pose = Plane.WorldXY
         self._penDown = True
         self._color = Color.FromArgb(0)
+        self._weight = 0
     
     def position(self):
         return self._pose.Origin
@@ -60,12 +61,16 @@ class Turtle:
             newPosition = self._pose.Origin + vector
             line = rs.AddLine(self._pose.Origin, newPosition)
             rs.ObjectColor(line, self._color)
+            rs.ObjectPrintColor(line, self._color)
+            rs.ObjectPrintWidth(line, self._weight)
         self._pose.Translate(vector)
     
     def moveTo(self, newPosition):
         if self._penDown:
             line = rs.AddLine(self._pose.Origin, newPosition)
             rs.ObjectColor(line, self._color)
+            rs.ObjectPrintColor(line, self._color)
+            rs.ObjectPrintWidth(line, self._weight)
         self._pose.Origin = newPosition
         
     def setHeading(self, newHeading):
@@ -79,23 +84,49 @@ class Turtle:
     
     def penDown(self):
         self._penDown = True
+    
+    def setWeight(self, weight):
+        self._weight = weight
 
+
+
+# Clear the board
+rs.DeleteObjects(rs.AllObjects(select=True))
+
+red = Color.FromArgb(255, 0, 0)
+green = Color.FromArgb(0, 255, 0)
+blue = Color.FromArgb(0, 0, 255)
 
 t = Turtle()
-t.forward(10)
-t.left(45)
-t.setColor(Color.FromArgb(255, 0, 0))
-t.forward(10)
-t.right(45)
-t.setColor(Color.FromArgb(0, 0, 255))
-t.forward(10)
+t.penUp()
+t.setPosition(-5, -5, -5)
+t.penDown()
 
+t.setColor(red)
+t.forward(10)
+t.up(90)
 
-t2 = Turtle()
-t2.forward(10)
-t2.up(45)
-t2.setColor(Color.FromArgb(255, 0, 0))
-t2.forward(10)
-t2.down(45)
-t2.setColor(Color.FromArgb(0, 0, 255))
-t2.forward(10)
+t.setWeight(1)
+t.setColor(blue)
+t.forward(10)
+t.left(90)
+
+t.setWeight(2)
+t.setColor(green)
+t.forward(10)
+t.up(90)
+
+t.setWeight(3)
+t.setColor(red)
+t.forward(10)
+t.left(90)
+
+t.setWeight(4)
+t.setColor(blue)
+t.forward(10)
+t.up(90)
+
+t.setWeight(5)
+t.setColor(green)
+t.forward(10)
+t.left(90)
