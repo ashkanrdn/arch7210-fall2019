@@ -8,8 +8,8 @@ class Turtle:
     def __init__(self):
         self._pose = Plane.WorldXY
         self._penDown = True
-        self._color = Color.FromArgb(0)
-        self._weight = 0
+        self.color = Color.FromArgb(0)
+        self.width = 0
 
     def position(self):
         return self._pose.Origin
@@ -60,33 +60,27 @@ class Turtle:
         if self._penDown:
             newPosition = self._pose.Origin + vector
             line = rs.AddLine(self._pose.Origin, newPosition)
-            rs.ObjectColor(line, self._color)
-            rs.ObjectPrintColor(line, self._color)
-            rs.ObjectPrintWidth(line, self._weight)
+            rs.ObjectColor(line, self.color)
+            rs.ObjectPrintColor(line, self.color)
+            rs.ObjectPrintWidth(line, self.width)
         self._pose.Translate(vector)
 
     def moveTo(self, newPosition):
         if self._penDown:
             line = rs.AddLine(self._pose.Origin, newPosition)
-            rs.ObjectColor(line, self._color)
-            rs.ObjectPrintColor(line, self._color)
-            rs.ObjectPrintWidth(line, self._weight)
+            rs.ObjectColor(line, self.color)
+            rs.ObjectPrintColor(line, self.color)
+            rs.ObjectPrintWidth(line, self.width)
         self._pose.Origin = newPosition
 
     def setHeading(self, newHeading):
         self._pose.XAxis = newHeading
-
-    def setColor(self, color):
-        self._color = color
 
     def penUp(self):
         self._penDown = False
 
     def penDown(self):
         self._penDown = True
-
-    def setWeight(self, weight):
-        self._weight = weight
 
 
 # Clear the board
@@ -101,31 +95,31 @@ t.penUp()
 t.setPosition(-5, -5, -5)
 t.penDown()
 
-t.setColor(red)
+t.color = red
 t.forward(10)
 t.up(90)
 
-t.setWeight(1)
-t.setColor(blue)
+t.width = 1
+t.color = blue
 t.forward(10)
 t.left(90)
 
-t.setWeight(2)
-t.setColor(green)
+t.width = 2
+t.color = green
 t.forward(10)
 t.up(90)
 
-t.setWeight(3)
-t.setColor(red)
+t.width = 3
+t.color = red
 t.forward(10)
 t.left(90)
 
-t.setWeight(4)
-t.setColor(blue)
+t.width = 4
+t.color = blue
 t.forward(10)
 t.up(90)
 
-t.setWeight(5)
-t.setColor(green)
+t.width = 5
+t.color = green
 t.forward(10)
 t.left(90)
