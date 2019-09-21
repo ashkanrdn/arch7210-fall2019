@@ -3,7 +3,7 @@ from Rhino.RhinoMath import ToRadians
 from Rhino.Geometry import Plane, Point3d, Vector3d
 from System.Drawing import Color
 
-class Turtle:
+class Turtle(object):
 
     def __init__(self):
         self._pose = Plane.WorldXY
@@ -47,14 +47,35 @@ class Turtle:
         else:
             self.moveTo(Point3d(x, y, z))
 
-    def setX(self, x):
+    def xcor(self):
+        """Return the turtle's X coordinate."""
+        return self._pose.OriginX
+
+    def setx(self, x):
+        """Set the turtle's X coordinate."""
         self.moveTo(Point3d(x, self._pose.OriginY, self._pose.OriginZ))
 
-    def setY(self, y):
+    X = property(fget=xcor, fset=setx, doc="The turtle's X coordinate.")
+
+    def ycor(self):
+        """Return the turtle's Y coordinate."""
+        return self._pose.OriginY
+
+    def sety(self, y):
+        """Set the turtle's Y coordinate."""
         self.moveTo(Point3d(self._pose.OriginX, y, self._pose.OriginZ))
 
-    def setZ(self, z):
+    Y = property(fget=ycor, fset=sety, doc="The turtle's Y coordinate.")
+
+    def zcor(self):
+        """Return the turtle's Z coordinate."""
+        return self._pose.OriginZ
+
+    def setz(self, z):
+        """Set the turtle's Z coordinate."""
         self.moveTo(Point3d(self._pose.OriginX, self._pose.OriginY, z))
+
+    Z = property(fget=zcor, fset=setz, doc="The turtle's Z coordinate.")
 
     def move(self, vector):
         if self._penDown:
@@ -92,7 +113,9 @@ blue = Color.FromArgb(0, 0, 255)
 
 t = Turtle()
 t.penUp()
-t.setPosition(-5, -5, -5)
+t.X = -5
+t.Y = -5
+t.Z = -5
 t.penDown()
 
 t.color = red
