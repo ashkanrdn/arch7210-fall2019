@@ -43,9 +43,14 @@ class Turtle(object):
 
     def setPosition(self, x, y=0, z=0):
         if isinstance(x, Point3d):
-            self.moveTo(x)
+            newPosition = x
         else:
-            self.moveTo(Point3d(x, y, z))
+            newPosition = Point3d(x, y, z)
+
+        if self._penDown:
+            self._drawLine(newPosition)
+
+        self._pose.Origin = newPosition
 
     def xcor(self):
         """Return the turtle's X coordinate."""
@@ -79,20 +84,14 @@ class Turtle(object):
 
     def move(self, vector):
         if self._penDown:
-            newPosition = self._pose.Origin + vector
-            line = rs.AddLine(self._pose.Origin, newPosition)
-            rs.ObjectColor(line, self.color)
-            rs.ObjectPrintColor(line, self.color)
-            rs.ObjectPrintWidth(line, self.width)
+            self._drawLine(self._pose.Origin + vector)
         self._pose.Translate(vector)
 
-    def moveTo(self, newPosition):
-        if self._penDown:
-            line = rs.AddLine(self._pose.Origin, newPosition)
-            rs.ObjectColor(line, self.color)
-            rs.ObjectPrintColor(line, self.color)
-            rs.ObjectPrintWidth(line, self.width)
-        self._pose.Origin = newPosition
+    def _drawLine(self, newPosition):
+        line = rs.AddLine(self._pose.Origin, newPosition)
+        rs.ObjectColor(line, self.color)
+        rs.ObjectPrintColor(line, self.color)
+        rs.ObjectPrintWidth(line, self.width)
 
     def setHeading(self, newHeading):
         self._pose.XAxis = newHeading
