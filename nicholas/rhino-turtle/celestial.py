@@ -1,5 +1,7 @@
+import json
 from Rhino.Display import DisplayConduit
 from Rhino.Geometry import Point3d, Vector3d
+from System.Drawing import Color
 import rhinoscriptsyntax as rs
 import rhinoturtle
 
@@ -78,3 +80,19 @@ class System(object):
                     else:
                         force += targetBody.forceFrom(otherBody)
             targetBody.move(force, time)
+
+    @classmethod
+    def fromJSON(cls, filePath):
+        with open(filePath, 'r') as file:
+            parsed = json.load(file)
+            system = cls(Point3d(0, 0, 0))
+
+            for data in parsed['bodies']:
+                body = Body(data['mass'])
+                body.position = Point3d(*data['position'])
+                body.velocity = Vector3d(*data['velocity'])
+                body.color = Color.FromArgb(*data['color'])
+                body.pendown()
+                system.add(body)
+
+            return system
