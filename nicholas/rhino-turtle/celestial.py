@@ -1,3 +1,4 @@
+from Rhino.Display import DisplayConduit
 from Rhino.Geometry import Point3d, Vector3d
 import rhinoscriptsyntax as rs
 import rhinoturtle
@@ -14,6 +15,8 @@ class Body(rhinoturtle.Turtle):
         self.penup()
         self.mass = mass  # The mass of the turtle in kilograms.
         self.speed = 0    # Speed of the turtle in AU per day.
+        self._conduit = Conduit(self)
+        self._conduit.Enabled = True
 
     @property
     def velocity(self):
@@ -38,6 +41,19 @@ class Body(rhinoturtle.Turtle):
         magnitude = G * self.mass * other.mass / distance / distance
         delta.Unitize()
         return delta * magnitude
+
+    def done(self):
+        self._conduit.Enabled = False
+
+
+# Idealy, the turtle would inherit from DisplayConduit, but that causes Rhino to crash.
+class Conduit(DisplayConduit):
+
+    def __init__(self, body):
+        self.body = body
+
+    def PostDrawObjects(self, e):
+        e.Display.DrawPoint(self.body.position, self.body.color)
 
 
 class System(object):
