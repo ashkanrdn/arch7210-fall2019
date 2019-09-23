@@ -94,7 +94,9 @@ class Turtle(object):
         rs.ObjectPrintWidth(line, self.width)
 
     def setHeading(self, newHeading):
-        self._pose.XAxis = newHeading
+        vector = Vector3d(newHeading)
+        vector.Unitize()
+        self._pose.XAxis = vector
 
     def penUp(self):
         self._penDown = False
