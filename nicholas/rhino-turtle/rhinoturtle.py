@@ -55,35 +55,32 @@ class Turtle(object):
     def rollRight(self, angle):
         self.left(-angle)
 
-    def xcor(self):
-        """Return the turtle's X coordinate."""
+    @property
+    def x(self):
+        """The turtle's x coordinate."""
         return self._pose.OriginX
 
-    def setx(self, x):
-        """Set the turtle's X coordinate."""
+    @x.setter
+    def x(self, x):
         self.position = Point3d(x, self._pose.OriginY, self._pose.OriginZ)
 
-    X = property(fget=xcor, fset=setx, doc="The turtle's X coordinate.")
-
-    def ycor(self):
-        """Return the turtle's Y coordinate."""
+    @property
+    def y(self):
+        """The turtle's y coordinate."""
         return self._pose.OriginY
 
-    def sety(self, y):
-        """Set the turtle's Y coordinate."""
+    @y.setter
+    def y(self, y):
         self.position = Point3d(self._pose.OriginX, y, self._pose.OriginZ)
 
-    Y = property(fget=ycor, fset=sety, doc="The turtle's Y coordinate.")
-
-    def zcor(self):
-        """Return the turtle's Z coordinate."""
+    @property
+    def z(self):
+        """The turtle's z coordinate."""
         return self._pose.OriginZ
 
+    @z.setter
     def setz(self, z):
-        """Set the turtle's Z coordinate."""
         self.position = Point3d(self._pose.OriginX, self._pose.OriginY, z)
-
-    Z = property(fget=zcor, fset=setz, doc="The turtle's Z coordinate.")
 
     def goto(self, x=None, y=None, z=None):
         self.position = Point3d(x or self.X, y or self.Y, z or self.Z)
