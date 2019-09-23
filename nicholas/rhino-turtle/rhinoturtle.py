@@ -11,14 +11,28 @@ class Turtle(object):
         self.color = Color.FromArgb(0)
         self.width = 0
 
+    @property
     def position(self):
         return self._pose.Origin
 
+    @position.setter
+    def position(self, newPosition):
+        if self._penDown:
+            self._drawLine(newPosition)
+        self._pose.Origin = newPosition
+
+    @property
     def heading(self):
         return self._pose.XAxis
 
+    @heading.setter
+    def heading(self, newHeading):
+        vector = Vector3d(newHeading)
+        vector.Unitize()
+        self._pose.XAxis = vector
+
     def forward(self, distance):
-        self.move(self.heading() * distance)
+        self.move(self.heading * distance)
 
     def back(self, distance):
         self.forward(-distance)
@@ -41,24 +55,13 @@ class Turtle(object):
     def rollRight(self, angle):
         self.left(-angle)
 
-    def setPosition(self, x, y=0, z=0):
-        if isinstance(x, Point3d):
-            newPosition = x
-        else:
-            newPosition = Point3d(x, y, z)
-
-        if self._penDown:
-            self._drawLine(newPosition)
-
-        self._pose.Origin = newPosition
-
     def xcor(self):
         """Return the turtle's X coordinate."""
         return self._pose.OriginX
 
     def setx(self, x):
         """Set the turtle's X coordinate."""
-        self.moveTo(Point3d(x, self._pose.OriginY, self._pose.OriginZ))
+        self.position = Point3d(x, self._pose.OriginY, self._pose.OriginZ)
 
     X = property(fget=xcor, fset=setx, doc="The turtle's X coordinate.")
 
@@ -68,7 +71,7 @@ class Turtle(object):
 
     def sety(self, y):
         """Set the turtle's Y coordinate."""
-        self.moveTo(Point3d(self._pose.OriginX, y, self._pose.OriginZ))
+        self.position = Point3d(self._pose.OriginX, y, self._pose.OriginZ)
 
     Y = property(fget=ycor, fset=sety, doc="The turtle's Y coordinate.")
 
@@ -78,9 +81,12 @@ class Turtle(object):
 
     def setz(self, z):
         """Set the turtle's Z coordinate."""
-        self.moveTo(Point3d(self._pose.OriginX, self._pose.OriginY, z))
+        self.position = Point3d(self._pose.OriginX, self._pose.OriginY, z)
 
     Z = property(fget=zcor, fset=setz, doc="The turtle's Z coordinate.")
+
+    def goto(self, x=None, y=None, z=None):
+        self.position = Point3d(x or self.X, y or self.Y, z or self.Z)
 
     def move(self, vector):
         if self._penDown:
@@ -92,11 +98,6 @@ class Turtle(object):
         rs.ObjectColor(line, self.color)
         rs.ObjectPrintColor(line, self.color)
         rs.ObjectPrintWidth(line, self.width)
-
-    def setHeading(self, newHeading):
-        vector = Vector3d(newHeading)
-        vector.Unitize()
-        self._pose.XAxis = vector
 
     def penUp(self):
         self._penDown = False
