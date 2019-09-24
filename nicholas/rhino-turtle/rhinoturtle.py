@@ -1,3 +1,4 @@
+import math
 import rhinoscriptsyntax as rs
 from Rhino.RhinoMath import ToRadians
 from Rhino.Geometry import Plane, Point3d, Vector3d
@@ -8,9 +9,9 @@ class Turtle(object):
     def __init__(self):
         self._pose = Plane.WorldXY
         self._penDown = True
-        self.color = Color.FromArgb(0)
+        self.color = Color.Black
         self.width = 0
-        self.OnPositionChange = []
+        self.decorators = []
 
 
     # Position properties and methods
@@ -24,11 +25,10 @@ class Turtle(object):
     def position(self, newPosition):
         if self._penDown:
             self._drawLine(newPosition)
-
-        for callback in self.OnPositionChange:
-            callback(newPosition - self._pose.Origin)
-
+        oldPosition = self._pose.Origin
         self._pose.Origin = newPosition
+        for decorator in self.decorators:
+            decorator.move(newPosition, oldPosition)
 
     @property
     def x(self):
@@ -74,6 +74,17 @@ class Turtle(object):
         vector.Unitize()
         self._pose.XAxis = vector
 
+    @property
+    def azimuth(self):
+        """The turtle's azimuth in degrees."""
+        return math.atan2(self.heading.y, self.heading.x) / math.pi * 180
+
+    @property
+    def elevation(self):
+        """The turtle's elevation in degrees."""
+        hypotenuse = math.sqrt(self.heading.x**2 + self.heading.y**2)
+        return math.atan2(self.heading.z, hypotenuse) / math.pi * 180
+
     def left(self, angle):
         """Turn the turtle `angle` degrees to the left."""
         self._pose.Rotate(ToRadians(angle), self._pose.ZAxis)
@@ -103,13 +114,7 @@ class Turtle(object):
 
     def move(self, vector):
         """Move the turtle according to the given vector."""
-        if self._penDown:
-            self._drawLine(self._pose.Origin + vector)
-
-        for callback in self.OnPositionChange:
-            callback(vector)
-
-        self._pose.Translate(vector)
+        self.position += vector
 
     def _drawLine(self, endPoint):
         """Draw a line from the turtle's current position to `endPoint`."""
@@ -136,3 +141,19 @@ class Turtle(object):
     def penup(self):
         """Pull the pen up so the turtle does not draw when moving."""
         self._penDown = False
+
+
+    # Etc.
+
+    def decorate(self, decorator):
+        self.decorators.append(decorator)
+
+
+
+class Decorator:
+
+    def __init__(self, object):
+        self.object = object
+
+    def move(self, newPosition, oldPosition):
+        rs.MoveObject(self.object, newPosition - oldPosition)

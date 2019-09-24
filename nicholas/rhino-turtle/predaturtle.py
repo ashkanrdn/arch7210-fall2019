@@ -47,19 +47,15 @@ rabbit.pendown()
 
 fox = Predator()
 fox.color = Color.Red
-#fox.position = Point3d(0, 0, 0)
+
 
 rabbitIcon = rs.AddSphere(rabbit.position, 0.5)
 rs.ObjectColor(rabbitIcon, rabbit.color)
-def OnRabbitMove(vector):
-    rs.MoveObject(rabbitIcon, vector)
-rabbit.OnPositionChange.append(OnRabbitMove)
+rabbit.decorate(rhinoturtle.Decorator(rabbitIcon))
 
 foxIcon = rs.AddCone(Plane.WorldXY, 2, 1)
 rs.ObjectColor(foxIcon, fox.color)
-def OnFoxMove(vector):
-    rs.MoveObject(foxIcon, vector)
-fox.OnPositionChange.append(OnFoxMove)
+fox.decorate(rhinoturtle.Decorator(foxIcon))
 
 caught = False
 
