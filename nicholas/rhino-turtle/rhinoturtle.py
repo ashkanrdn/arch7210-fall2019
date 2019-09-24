@@ -10,6 +10,7 @@ class Turtle(object):
         self._penDown = True
         self.color = Color.FromArgb(0)
         self.width = 0
+        self.OnPositionChange = []
 
 
     # Position properties and methods
@@ -23,6 +24,10 @@ class Turtle(object):
     def position(self, newPosition):
         if self._penDown:
             self._drawLine(newPosition)
+
+        for callback in self.OnPositionChange:
+            callback(newPosition - self._pose.Origin)
+
         self._pose.Origin = newPosition
 
     @property
@@ -100,6 +105,10 @@ class Turtle(object):
         """Move the turtle according to the given vector."""
         if self._penDown:
             self._drawLine(self._pose.Origin + vector)
+
+        for callback in self.OnPositionChange:
+            callback(vector)
+
         self._pose.Translate(vector)
 
     def _drawLine(self, endPoint):

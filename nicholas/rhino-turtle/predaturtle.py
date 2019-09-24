@@ -1,6 +1,6 @@
 import random
 import rhinoturtle
-from Rhino.Geometry import Point3d
+from Rhino.Geometry import Plane, Point3d
 from System.Drawing import Color
 import rhinoscriptsyntax as rs
 
@@ -49,9 +49,23 @@ fox = Predator()
 fox.color = Color.Red
 #fox.position = Point3d(0, 0, 0)
 
+rabbitIcon = rs.AddSphere(rabbit.position, 0.5)
+rs.ObjectColor(rabbitIcon, rabbit.color)
+def OnRabbitMove(vector):
+    rs.MoveObject(rabbitIcon, vector)
+rabbit.OnPositionChange.append(OnRabbitMove)
+
+foxIcon = rs.AddCone(Plane.WorldXY, 2, 1)
+rs.ObjectColor(foxIcon, fox.color)
+def OnFoxMove(vector):
+    rs.MoveObject(foxIcon, vector)
+fox.OnPositionChange.append(OnFoxMove)
+
 caught = False
 
 while not caught:
     rabbit.wander()
     caught = fox.chase(rabbit)
     rs.Sleep(500)
+
+rs.DeleteObject(rabbitIcon)
