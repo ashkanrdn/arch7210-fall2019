@@ -8,19 +8,20 @@ reload(rhinoturtle)
 
 class Predator(rhinoturtle.Turtle):
 
-    def __init__(self):
+    def __init__(self, maxSpeed):
         rhinoturtle.Turtle.__init__(self)
+        self.maxSpeed = maxSpeed
 
     def chase(self, prey):
         vector = prey.position - self.position
         distance = vector.Length
         self.heading = vector
 
-        if distance < 8:
+        if distance < self.maxSpeed:
             self.forward(distance)
             return True
 
-        self.forward(8)
+        self.forward(self.maxSpeed)
         return False
 
 
@@ -45,7 +46,7 @@ rabbit.position = Point3d(20, 40, 0)
 rabbit.color = Color.Blue
 rabbit.pendown()
 
-fox = Predator()
+fox = Predator(8)
 fox.color = Color.Red
 
 
