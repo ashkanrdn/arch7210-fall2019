@@ -7,7 +7,8 @@ import math
 
 
 def createSphereDecorator(body):
-    sphere = rs.AddSphere(body.position, 0.05)
+    radius = math.log(body.radius) / 100
+    sphere = rs.AddSphere(body.position, radius)
     rs.ObjectColor(sphere, body.color)
     return rhinoturtle.Decorator(sphere)
 

@@ -12,12 +12,13 @@ class Body(rhinoturtle.Turtle):
     """A celestial body such as a moon, planet, or star.
     Adapted from https://introcs.cs.princeton.edu/python/34nbody/body.py.html"""
 
-    def __init__(self, name='', mass=0.0):
+    def __init__(self, name='', mass=0.0, radius=0):
         rhinoturtle.Turtle.__init__(self)
         self.penup()
         self.name = name
         self.mass = mass  # The mass of the turtle in kilograms.
         self.speed = 0    # Speed of the turtle in AU per day.
+        self.radius = radius # Radius of the turtle in kilometers.
 
     @property
     def velocity(self):
@@ -78,7 +79,7 @@ class System(object):
             system = cls(Point3d(0, 0, 0))
 
             for data in parsed['bodies']:
-                body = Body(data['name'], data['mass'])
+                body = Body(data['name'], data['mass'], data['radius'])
                 body.position = Point3d(*data['position'])
                 body.velocity = Vector3d(*data['velocity'])
                 body.color = Color.FromArgb(*data['color'])
