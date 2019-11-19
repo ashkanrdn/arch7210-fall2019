@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{ .Name }}</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="reconnecting-websocket.js"></script>
+        <script>
+            
+            var channelLog = [
+                {{ range .Log }}
+                    {{ printf "%s" .Data }},
+                {{ end }}
+            ];
+
+        </script>
+        <script src="channel.js"></script>
+    </head>
+    <body>
+        <ol></ol>
+        <form>
+            <datalist id="knownMethods">
+                <option>forward</option>
+                <option>backward</option>
+                <option>left</option>
+                <option>right</option>
+                <option>goto</option>
+            </datalist>
+            <input name="method" type="text" placeholder="method" list="knownMethods" autofocus>
+            <input name="params" type="text" placeholder="parameters">
+            <button name="submit" disabled>Send</button>
+        </form>
+    </body>
+</html>
