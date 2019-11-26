@@ -14,23 +14,26 @@ class JSONRPCWebSocket(WebSocket):
 		basic_credentials = b64encode(user_pass.encode())
 		self.add_header("Authorization".encode(), "Basic ".encode() +  basic_credentials)
 
-
 	def requests(self, persistent=True, **persist_args):
 		"""Return an interator"""
 		events = persist(self, **persist_args) if persistent else self
 		for event in events:
-			if event.name == "text":
-				try:
-					parsed = event.json
-					if "method" in parsed.keys():
-						yield Request(**parsed)
+			request = self.get_request(event)
+			if request is not None:
+				yield request
 
-				except JSONDecodeError:
-					self.send_error(-32700, "Invalid JSON received")
+	def get_request(self, event):
+		if event.name == "text":
+			try:
+				parsed = event.json
+				if "method" in parsed.keys():
+					return Request(**parsed)
 
-				except InvalidRequest as err:
-					self.send_error(-32600, err.args[0])
+			except JSONDecodeError:
+				self.send_error(-32700, "Invalid JSON received")
 
+			except InvalidRequest as err:
+				self.send_error(-32600, err.args[0])
 
 	
 	def send_response(self, response_type, response_data, request_id=None):
