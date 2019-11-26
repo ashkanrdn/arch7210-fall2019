@@ -2,10 +2,8 @@ import RPi.GPIO as GPIO
 import math
 import time
 
-STEPS_PER_REVOLUTION = 4096
-
 class Motor:
-	"""Represents a 28BYJ-48 stepper motor."""
+	"""Represents a stepper motor."""
 
 	sequence = [
 		[1,0,0,0],
@@ -103,16 +101,17 @@ class Axle:
 class PhysicalAxle(Axle):
 	"""Represents a pair of stepper motors connected to wheels of known size that are a known distance apart."""
 
-	def __init__(self, left, right, circumference, track):
+	def __init__(self, left, right, steps_per_revolution, circumference, track):
 		super().__init__(left, right)
+		self.steps_per_revolution = steps_per_revolution
 		self.circumference = circumference
 		self.track = track
 
 	def _distanceToSteps(self, distance):
-		return distance * STEPS_PER_REVOLUTION / self.circumference
+		return distance * self.steps_per_revolution / self.circumference
 	
 	def _stepsToDistance(self, steps):
-		return steps * self.circumference / STEPS_PER_REVOLUTION
+		return steps * self.circumference / self.steps_per_revolution
 
 	def _degreesToSteps(self, degrees):
 		arcLength = math.pi * self.track * degrees / 360

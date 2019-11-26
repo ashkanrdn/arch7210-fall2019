@@ -9,7 +9,7 @@ GPIO.setmode(GPIO.BOARD)
 
 left = stepper.Motor(31, 33, 35, 37)
 right = stepper.Motor(7, 11, 13, 15)
-axle = stepper.PhysicalAxle(left, right, 3.1770833333, 6.90625)
+axle = stepper.PhysicalAxle(left, right, 4096, 3.1770833333, 6.90625)
 
 robot = turtlebot.Turtle(axle)
 
