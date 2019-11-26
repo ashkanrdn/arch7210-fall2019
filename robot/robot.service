@@ -1,0 +1,8 @@
+[Unit]
+Description=Drawing Robot
+
+[Service]
+ExecStart=/home/pi/arch7210-fall2019/robot/robot.py
+
+[Install]
+WantedBy=multi-user.target
