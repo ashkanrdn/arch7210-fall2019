@@ -1,5 +1,5 @@
 import math
-from geometry import Vector
+from .geometry import Vector
 
 class Turtle:
 
