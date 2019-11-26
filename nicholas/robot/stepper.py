@@ -101,11 +101,12 @@ class Axle:
 class PhysicalAxle(Axle):
 	"""Represents a pair of stepper motors connected to wheels of known size that are a known distance apart."""
 
-	def __init__(self, left, right, steps_per_revolution, circumference, track):
+	def __init__(self, left, right, steps_per_revolution, circumference, track, speed=0.001):
 		super().__init__(left, right)
 		self.steps_per_revolution = steps_per_revolution
 		self.circumference = circumference
 		self.track = track
+		self.speed = speed
 
 	def _distanceToSteps(self, distance):
 		return distance * self.steps_per_revolution / self.circumference
@@ -125,12 +126,12 @@ class PhysicalAxle(Axle):
 		"""Moves the axle by the given distance."""
 		calculated_steps = self._distanceToSteps(distance)
 		rounded_steps = math.floor(calculated_steps)
-		super().move(int(rounded_steps))
+		super().move(int(rounded_steps), self.speed)
 		return self._stepsToDistance(calculated_steps - rounded_steps)
 	
 	def rotate(self, degrees):
 		"""Rotates the axle by the given number of degrees."""
 		calculated_steps = self._degreesToSteps(degrees)
 		rounded_steps = math.floor(calculated_steps)
-		super().rotate(int(rounded_steps))
+		super().rotate(int(rounded_steps), self.speed)
 		return self._stepsToDegrees(calculated_steps - rounded_steps)
