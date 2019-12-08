@@ -42,7 +42,7 @@ class BicolorMatrix:
 	def apply(self, ledMatrix):
 		for x in range(self.size):
 			for y in range(self.size):
-				ledMatrix.pixel(x, y, self.data[x][y])
+				ledMatrix.pixel(x, y, self.data[y][x])
 		if not ledMatrix.auto_write:
 			ledMatrix.show()
 
@@ -72,11 +72,11 @@ class BicolorMatrix:
 				transposed.data[y][x] = self.data[max-x][max-y]
 		return transposed
 
-	def rotateRight(self):
+	def rotateLeft(self):
 		"""Rotate the matrix 90 degrees clockwise."""
 		return self.transpose().flop()
 	
-	def rotateLeft(self):
+	def rotateRight(self):
 		"""Rotate the matrix 90 degrees counterclockwise."""
 		return self.transpose().flip()
 
