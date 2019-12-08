@@ -1,0 +1,8 @@
+[Unit]
+Description=Needed to run servo motor code
+
+[Service]
+ExecStart=pigpiod
+
+[Install]
+WantedBy=multi-user.target
