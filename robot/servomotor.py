@@ -10,9 +10,14 @@ class ServoPen:
     
     def apply(self,GPIO_Pin, pulse):
         #0 = off
-        #1000 = position anti-clockwise
-        #1500 = middle
-        #2000 = position clockwise
+        #500 = horizontal 
+        #1200 = 90 degrees
 
         self.pi.set_servo_pulsewidth(GPIO_Pin, pulse)
         time.sleep(1)
+        
+    def up(self):
+        self.apply(18,1200)
+    
+    def down(self):
+        self.apply(18,500)

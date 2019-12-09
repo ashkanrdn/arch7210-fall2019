@@ -1,4 +1,5 @@
 import math
+import servomotor
 from .geometry import Vector
 
 class Turtle:
@@ -7,6 +8,7 @@ class Turtle:
 		self.axle = axle
 		self.position = Vector(0, 0)
 		self.heading = Vector(1, 0)
+		self.ServoPen()
 
 	def forward(self, distance):
 		self.axle.move(distance)
@@ -29,7 +31,11 @@ class Turtle:
 		self.left(delta.angle() - self.heading.angle())
 		self.forward(delta.magnitude())
 	
-
+	def penup(self):
+		self.up()
+		
+	def pendown(self):
+		self.down()
 
 	def drawPolygon(self, num_sides, radius):
 		a = 360 / num_sides
@@ -44,3 +50,7 @@ class Turtle:
 		for _ in range(num_vertices):
 			self.forward(s)
 			self.left(180 - a/2)
+
+carlos = Turtle()
+carlos.penup()
+carlos.pendown()
