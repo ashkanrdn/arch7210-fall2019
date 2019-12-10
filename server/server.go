@@ -13,7 +13,7 @@ import (
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "80"
+		port = "8080"
 	}
 
 	server := &Server{Channels: make(map[string]*Channel), Password: "********"}
