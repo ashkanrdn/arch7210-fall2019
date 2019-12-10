@@ -3,6 +3,9 @@
 import RPi.GPIO as GPIO
 import os
 import sys
+import servomotor
+
+print(__file__)
 
 # Modify PATH so we can import files from elsewhere in this repo
 sys.path.append(os.path.dirname(__file__) + "/..")
@@ -12,7 +15,7 @@ from nicholas.robot.turtlebot import Turtle
 from nicholas.robot.wsjsonrpc import JSONRPCWebSocket
 
 
-GPIO.setmode(GPIO.board)
+GPIO.setmode(GPIO.BOARD)
 
 # Set up the motors
 left = Motor(7, 11, 13, 15)
@@ -24,12 +27,14 @@ circumference_of_wheel = 8.71875
 distance_between_wheels = 9.5625
 axle = PhysicalAxle(left, right, microsteps_per_revolution, circumference_of_wheel, distance_between_wheels, 0.01)
 
+pen = servomotor.ServoPen()
+
 # Create the robot
-robot = Turtle(axle)
+robot = Turtle(axle, pen)
 
 # Set up the WebSocket connection
 ws = JSONRPCWebSocket("wss://arch7210-fall2019.coditect.com/pablo")
-ws.set_basic_auth("pablo", "********")
+ws.set_basic_auth("pablo", "KarduniKlub")
 
 try:
 	for request in ws.requests():

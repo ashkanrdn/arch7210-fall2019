@@ -1,5 +1,12 @@
 from PIL import Image
 
+import busio
+import board
+from adafruit_ht16k33.matrix import Matrix8x8x2
+i2c = busio.I2C(board.SCL, board.SDA)
+
+
+
 BLACK = 0
 GREEN = 1
 RED = 2
@@ -24,7 +31,6 @@ def loadImage(path):
 				matrix.data[y][x] = GREEN
 	
 	return matrix
-
 
 class BicolorMatrix:
 
@@ -83,3 +89,4 @@ class BicolorMatrix:
 	def print(self):
 		for row in self.data:
 			print(row)
+			
