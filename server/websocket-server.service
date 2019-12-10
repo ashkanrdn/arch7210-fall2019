@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/home/ec2-user/arch7210-fall2019/server/bin/server
+ExecStart=/home/ec2-user/arch7210-fall2019/server/server
 
 [Install]
 WantedBy=multi-user.target

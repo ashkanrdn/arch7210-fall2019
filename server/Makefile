@@ -1,9 +1,8 @@
 .PHONY: compile install
 
 compile:
-	mkdir -p bin
-	go build -o bin/server .
-	chmod +x bin/server
+	go build -o server .
+	chmod +x server
 
 install:
 	cp websocket-server.service /etc/systemd/system
