@@ -5,7 +5,6 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-RestartLimitAction=reboot
 ExecStart=/home/ec2-user/arch7210-fall2019/server/bin/server
 
 [Install]
