@@ -20,6 +20,10 @@ BLINK_HALFOPEN = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/blink_h
 BLINK_HALFCLOSED = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/blink_halfway_closed.png")
 BLINK_CLOSED = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/blink_closed.png")
 TIRED = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/tired_center.png")
+SAD_CENTER = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/sad_center.png")
+SAD_LEFT = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/sad_left.png")
+SAD_RIGHT = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/sad_right.png")
+
 
 class RobotEyes:
     
@@ -119,20 +123,21 @@ class RobotEyes:
         """Generate tired eyes in the center of matrix"""
         self.applyBoth(TIRED)
         
-        
     """=============SAD EYES============="""
-    #Still needs work
+
     def sad_center(self):
-        """Generate tired eyes in the center of matrix"""
-        self.applyBoth(TIRED)
+        """Generate sad eyes in the center of matrix"""
+        self.applyMirrored(SAD_CENTER)
         
     def sad_left(self):
-        """Generate tired eyes in the center of matrix"""
-        self.applyBoth(TIRED)
+        """Generate sad eyes in the left of matrix"""
+        self.applyLeft(SAD_LEFT.flip())
+        self.applyRight(SAD_RIGHT.flip())
         
     def sad_right(self):
-        """Generate tired eyes in the center of matrix"""
-        self.applyBoth(TIRED)
+        """Generate sad eyes in the right of matrix"""
+        self.applyLeft(SAD_RIGHT)
+        self.applyRight(SAD_LEFT)
         
     """=============BLINK EYES============="""
     
@@ -193,7 +198,6 @@ class RobotEyes:
             self.tired_eyes
         ], duration)
 
-
     def wander_left_right(self, duration = 1):
         """Eyes moving left and right"""
         self.animate([
@@ -218,8 +222,7 @@ class RobotEyes:
             self.normal_center
         ], duration)
         
-        
-    def angry_stare(self, duration = 1):
+    def angry(self, duration = 1):
         self.animate([
             self.angry_center,
             self.angry_left,
@@ -227,20 +230,17 @@ class RobotEyes:
             self.angry_right,
             self.angry_center
         ], duration)
-                
-#Still missing sad animation GITHUB not working
+        
+    def sad(self, duration = 1):
+        self.animate([
+            self.sad_center,
+            self.sad_right,
+            self.sad_center,
+            self.sad_left,
+            self.sad_center,
+        ], duration)
+        
 
-eyes = RobotEyes()
-eyes.angry_stare()
-
-"""
-normal_left = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/normal_left.png")
-normal_right = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/normal_right.png")
-angry_right = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/angry_center.png")
-
-
-angry_right.apply(rightEye)
-angry_left = angry_right.flip()
-
-angry_left.apply(leftEye)
-"""
+#Lines just for testing                
+#eyes = RobotEyes()
+#eyes.sad()
