@@ -2,6 +2,7 @@
 Description=Needed to run servo motor code
 
 [Service]
+Type=forking
 ExecStart=pigpiod
 
 [Install]
