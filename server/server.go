@@ -57,6 +57,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	publicPath := filepath.Dir(os.Args[0]) + "/public" + r.URL.Path
 	if info, err := os.Stat(publicPath); err == nil && !info.IsDir() {
+		fmt.Println("Serving", publicPath)
 		http.ServeFile(w, r, publicPath)
 		return
 	}
@@ -67,9 +68,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveTemplate(w http.ResponseWriter, r *http.Request, path string, data interface{}) {
+	fmt.Println("Serving template", path)
 	t, err := template.ParseFiles(path)
 	if err != nil {
 		http.Error(w, "Internal Server Error", 500)
+		fmt.Println(err)
 		return
 	}
 
@@ -77,5 +80,6 @@ func serveTemplate(w http.ResponseWriter, r *http.Request, path string, data int
 	err = t.Execute(w, data)
 	if err != nil {
 		fmt.Fprint(w, err)
+		fmt.Println(err)
 	}
 }
