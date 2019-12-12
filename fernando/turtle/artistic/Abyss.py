@@ -71,5 +71,5 @@ while x > 0:
         MultiSpirograph(125, r, d, 0, (x,255,255))
         x = x - 20
         d = d + 60
-        r = r +20
+        r = r + 5
 turtle.done()
