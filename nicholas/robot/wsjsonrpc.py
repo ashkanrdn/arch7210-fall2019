@@ -31,9 +31,11 @@ class JSONRPCWebSocket(WebSocket):
 
 			except JSONDecodeError:
 				self.send_error(-32700, "Invalid JSON received")
+				return False
 
 			except InvalidRequest as err:
 				self.send_error(-32600, err.args[0])
+				return False
 
 	
 	def send_response(self, response_type, response_data, request_id=None):
@@ -91,14 +93,19 @@ class Request:
 					result = "Completed " + self.method
 				
 				websocket.send_result(result, self.id)
+				return True
+
 			else:
 				websocket.send_error(-32601, f"{self.method} is not defined", request_id=self.id)
+				return False
 			
 		except AttributeError:
 			websocket.send_error(-32601, f"{self.method} is not defined", request_id=self.id)
+			return False
 
 		except Exception as err:
 			websocket.send_error(-32000, err.args[0], request_id=self.id)
+			return False
 
 
 class InvalidRequest(Exception):
