@@ -1,11 +1,5 @@
 from PIL import Image
 
-import busio
-import board
-from adafruit_ht16k33.matrix import Matrix8x8x2
-i2c = busio.I2C(board.SCL, board.SDA)
-
-
 
 BLACK = 0
 GREEN = 1

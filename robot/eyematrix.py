@@ -1,9 +1,11 @@
 import matrix
-import busio
-import board
 import time
 from adafruit_ht16k33.matrix import Matrix8x8x2
-i2c = busio.I2C(board.SCL, board.SDA)
+
+#Commment this line out when running robot.py
+#import busio
+#import board
+#i2c = busio.I2C(board.SCL, board.SDA)
 
 """Links to all the images used for the eyes"""
 
@@ -27,9 +29,9 @@ SAD_RIGHT = matrix.loadImage("/home/pi/arch7210-fall2019/robot/eyes/sad_right.pn
 
 class RobotEyes:
     
-    def __init__(self):
-        self.leftEye = Matrix8x8x2(i2c,address=0x70,auto_write = False) 
-        self.rightEye = Matrix8x8x2(i2c,address=0x74,auto_write = False)  
+    def __init__(self, i2c, left_address, right_address):
+        self.leftEye = Matrix8x8x2(i2c,left_address,auto_write = False) 
+        self.rightEye = Matrix8x8x2(i2c,right_address,auto_write = False)  
 
     def applyLeft(self, image):
         """Apply image to just the left eye"""
@@ -198,7 +200,7 @@ class RobotEyes:
             self.tired_eyes
         ], duration)
 
-    def wander_left_right(self, duration = 1):
+    def wander_left_right(self, duration = 3):
         """Eyes moving left and right"""
         self.animate([
             self.normal_center,
@@ -208,7 +210,7 @@ class RobotEyes:
             self.normal_center,
         ], duration)
         
-    def wander_around(self, duration = 1):
+    def wander_around(self, duration = 3):
         """Eyes moving in an diagonal pattern"""
         self.animate([
             self.normal_center,
@@ -240,7 +242,28 @@ class RobotEyes:
             self.sad_center,
         ], duration)
         
+        
+    def happy(self, duration = 1):
+        self.animate([
+            self.happy_center,
+            self.happy_left,
+            self.happy_center,
+            self.happy_right,
+            self.happy_center,
+        ], duration)
+        
+    def runAllAnimations(self, duration = 10):
+        self.animate([
+			self.happy(),
+			self.sad(),
+			self.angry(),
+			self.wander_around(),
+			self.wander_left_right(),
+			self.blink(),
+            self.bored(),
+            self.tired()
+		], duration)
 
 #Lines just for testing                
-#eyes = RobotEyes()
-#eyes.sad()
+#eyes = RobotEyes(i2c,0x70,0x74)
+#eyes.runAllAnimations()
